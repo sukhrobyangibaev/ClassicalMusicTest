@@ -1,0 +1,79 @@
+<% include ./partials/header %>
+
+<div class="chooseLine">
+    <p>Congratulations <%= player.username %>, your score is <%= player.points %>/10</p>
+    <p>Checklist:</p>
+</div>
+
+<% for(let i = 0; i < player.answers.length; i++){ %>
+    <hr class="hrFinish">
+    <% if(player.answers[i].right) { %>
+        <div class="correctAnswer">
+            <div>
+                <p class="finishP">Your answer: <%=player.answers[i].givenAnswer%></p>
+                <audio class="audio-player-finish" src="/<%=player.answers[i].sound%>">sd</audio>
+            </div>
+            <div>
+                <i class="play-finish fa fa-play"></i>
+            </div>
+        </div>
+    <% } else { %>
+        <div class="wrongAnswer">
+            <div>
+                <p class="finishP">Your answer: <%=player.answers[i].givenAnswer%></p>
+                <p class="finishP">Correct answer: <%=player.answers[i].correctAnswer%></p>
+                <audio class="audio-player-finish" src="/<%=player.answers[i].sound%>">sd</audio>
+            </div>
+            <div>
+                <i class="play-finish fa fa-play"></i>
+            </div>
+        </div>
+    <% } %>
+    
+<% } %>
+<hr class="hrFinish">
+<div class="directingA">   
+    <button id="retry" class="directing">Try Again</button>
+    <a href="/toplist"><button class="directing">Show Toplist</button></a>
+</div>
+
+<form action="/retry" method="POST">
+    <input type="hidden" name ="playerID" value="<%= player._id %>">
+    <button id="inputButton"></button>
+</form>
+
+
+<script>
+    document.getElementById("retry").addEventListener("click", () => {
+        document.getElementById("inputButton").click();
+    })
+
+    var play_button = $('.play-finish');
+    var player = $(".audio-player-finish");
+  
+    for(let i = 0; i < player.length; i++) {
+        play_button[i].addEventListener('click', () => {
+            if(player[i].paused) {
+                for(let i = 0; i < player.length; i++) {
+                    player[i].pause();
+                    play_button[i].classList.remove("fa-pause");
+                    play_button[i].classList.add("fa-play");
+                }
+                player[i].play();
+                play_button[i].classList.remove("fa-play");
+                play_button[i].classList.add("fa-pause");
+            } else {
+                player[i].pause();
+                play_button[i].classList.remove("fa-pause");
+                play_button[i].classList.add("fa-play");
+            }
+        });
+        player[i].addEventListener("ended", function() {
+            play_button[i].classList.remove("fa-pause");
+            play_button[i].classList.add("fa-play");
+        });
+    }
+    
+</script>
+
+<% include ./partials/footer %>

@@ -1,0 +1,37 @@
+<% include ./partials/header %>
+
+<div class="chooseLine">
+    <p>TopList</p>
+</div>
+<hr class="hrFinish">
+<hr>
+<div class="toplistContainerHeader">
+    <div class="item">
+        <p>#</p>
+    </div>
+    <div class="item">
+        <p>Player</p>
+    </div>
+    <div class="item">
+        <p>Score</p>
+    </div>
+</div>
+<hr class="hrFinish">
+<% for(let i = 0; i < 10; i++) { %>
+    <hr>
+    <div class="toplistContainer">
+        <div class="item">
+            <p><%= i+1 %></p>
+        </div>
+        <div class="item">
+            <p><%= player[i] %></p>
+        </div>
+        <div class="item">
+            <p><%= points[i] %></p>
+        </div>
+    </div>
+    
+<% } %>
+
+
+<% include ./partials/footer %>

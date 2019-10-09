@@ -1,0 +1,139 @@
+<% include ./partials/header %>
+    <div class="chooseLine">
+        <p>Level: <%= lvl %> <span id="separator">|</span><span> Your score: </span><span id="showPoints"><%= points %></span><span>/10</span>
+        </p>
+    </div>
+    
+    <div id="audioPlayerContainer">
+        <audio autoplay id="player" src="/<%= raund.sound %>">sd</audio>
+    </div>
+    <div id="audio-player">
+        <div id="controls">
+            <i id="play" class="fa fa-pause"></i>
+            <div id="time" class="time">0:00</div>
+            <div id="progressContainer">
+                <div id="progressbar"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chooseLine">
+        <p>Choose your answer:</p>
+    </div>
+    <div id="optionsContainer">
+        <% for( let i = 0; i < raund.titles.length; i++){ %>
+        <button class="optionBtns"><%= raund.titles[i] %></button>
+        <% } %>
+    </div>  
+    
+    <form action="/game/<%= player %>/<%= lvl %>" method="POST">
+        <input id="answerCorrect" type="hidden" name="answerCorrect" value="<%= raund.correct %>">
+        <input id="givenAnswer" type="hidden" name="givenAnswer" value="">
+        <input type="hidden" name="points" value="<%= points %>">
+        <input type="hidden" name="sound" value="<%= raund.sound %>">
+        <button id="next" >Next</button>
+    </form>
+        
+</div>
+<script>
+    var answerCorrect = document.getElementById("answerCorrect");
+    var optionBtns = document.getElementsByClassName("optionBtns");
+    var showPoints = document.getElementById("showPoints");
+    for(let i = 0; i < optionBtns.length; i++){
+        optionBtns[i].addEventListener("click", () => {
+            for(let i = 0; i < optionBtns.length; i++){
+                optionBtns[i].disabled = true;
+                if(optionBtns[i].textContent === answerCorrect.value){
+                    optionBtns[i].style.background = "#38ef7d";
+                    optionBtns[i].style.color = "black";
+                }
+            }
+
+            if(optionBtns[i].textContent === answerCorrect.value){
+                showPoints.textContent = Number(showPoints.textContent) + 1;
+                optionBtns[i].style.background = "#38ef7d";
+                optionBtns[i].style.color = "black";
+            } else {
+                optionBtns[i].style.background = "#FF4B2B";
+                optionBtns[i].style.color = "black";
+            }
+            document.getElementById("givenAnswer").value = optionBtns[i].textContent;
+            console.log(document.getElementById("givenAnswer").value);
+            setTimeout(next, 2000);
+        })
+    }
+
+    function next() {
+        var next = document.getElementById("next");
+        next.click();
+    }
+    //======================================================================
+var audio_player = $("#audio-player");
+var play_button = $('#play');
+var progress_bar = $("#progressbar");
+var time = $("#time");
+var mute_button = $('#mute');
+var volume_bar = $('#volume');
+var more_info = $('#more-info-box');
+var info_tray = $("#info-tray");
+var player = document.getElementById('player');
+var duration = 0;
+var volume = 0.75;
+
+player.onloadedmetadata = function() {
+    duration = player.duration;
+    progress_bar.progressbar("option", { 'max' : duration });
+};
+
+
+player.volume = 1;
+player.addEventListener("ended", function() {
+    play_button.toggleClass("fa-play", player.paused);
+});
+player.addEventListener("timeupdate", function() {
+    progress_bar.progressbar('value', player.currentTime);
+    time.text(getTime(player.currentTime));
+}, false);
+
+
+function getTime(t) {
+    var m=~~(t/60), s=~~(t % 60);
+    return (m<10?+m:m)+':'+(s<10?"0"+s:s);
+    return (m<10?"0"+m:m)+':'+(s<10?"0"+s:s);
+}
+
+function getProgressBarClickInfo(progress_bar, e) {
+    var offset = progress_bar.position();
+    var x = e.pageX - offset.left; // or e.offsetX (less support, though)
+    var y = e.pageY - offset.top;  // or e.offsetY
+    var max = progress_bar.progressbar("option", "max");
+    var value = x * max / progress_bar.width();
+
+    return { x: x, y: y, max: max, value: value };
+}
+
+
+progress_bar.progressbar({
+    value : player.currentTime,
+});
+
+progress_bar.click(function(e) {
+    var info = getProgressBarClickInfo($(this), e);
+    player.currentTime = player.duration / info.max * info.value;
+});
+
+
+
+play_button.click(function() {
+    player[player.paused ? 'play' : 'pause']();
+    $(this).toggleClass("fa-play", player.paused);
+    $(this).toggleClass("fa-pause", !player.paused);
+});
+    
+
+
+    //======================================================================
+
+</script>
+
+<% include ./partials/footer %>

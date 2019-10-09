@@ -1,0 +1,16 @@
+<% include ./partials/header %>
+
+<div class="chooseLine">
+    <p>Let's test your knowledge of classical music</p>
+    <hr>
+    <p>Write your name below:</p>
+    <p id="errorMsg"><%= errorMsg %></p>
+    <form action="/addPlayer" method="POST">
+        <div>
+            <input type="text" name="playerName" placeholder="your name">
+        </div>
+        <button id="start">START</button>
+    </form>
+</div>
+
+<% include ./partials/footer %>
