@@ -9,7 +9,7 @@ var gameRoute = require("./routes/game");
 
 
 //connecting to db
-mongoose.connect("mongodb+srv://sukhrobyangibaev:demon9609@database-cgjxr.mongodb.net/ClassicalMusicTest?retryWrites=true&w=majority", {
+mongoose.connect(process.env.DATABASEURL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
@@ -42,7 +42,7 @@ app.use((req, res, next) => {
 
 app.use("/", gameRoute);
 
-seedDB();
+//seedDB();
 
 //connecting to port
 const port = process.env.PORT || 8080;
