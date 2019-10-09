@@ -42,7 +42,7 @@ app.use((req, res, next) => {
 
 app.use("/", gameRoute);
 
-seedDB();
+//seedDB();
 
 //connecting to port
 const port = process.env.PORT || 8080;
