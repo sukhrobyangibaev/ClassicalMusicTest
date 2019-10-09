@@ -177,6 +177,9 @@ button{
 .item p{
     margin: 10px 0;
 }
+#inputButton{
+    display: none;
+}
 
 /* audio player ===============================================================*/
 #audio-player {
