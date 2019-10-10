@@ -1,40 +1,41 @@
 <% include ./partials/header %>
 
-<div class="chooseLine">
+<div class="textLine">
     <p>Congratulations <%= player.username %>, your score is <%= player.points %>/10</p>
     <p>Checklist:</p>
 </div>
 
 <% for(let i = 0; i < player.answers.length; i++){ %>
-    <hr class="hrFinish">
+    <hr class="hrWide">
     <% if(player.answers[i].right) { %>
-        <div class="correctAnswer">
+        <div class="finisListItem correctAnswer">
             <div>
-                <p class="finishP">Your answer: <%=player.answers[i].givenAnswer%></p>
+                <p class="finisListItemText">Your answer: <%=player.answers[i].givenAnswer%></p>
                 <audio class="audio-player-finish" src="/<%=player.answers[i].sound%>">sd</audio>
             </div>
             <div>
-                <i class="play-finish fa fa-play"></i>
+                <i class="playFinishPage fa fa-play"></i>
             </div>
         </div>
     <% } else { %>
-        <div class="wrongAnswer">
+        <div class="finisListItem wrongAnswer">
             <div>
-                <p class="finishP">Your answer: <%=player.answers[i].givenAnswer%></p>
-                <p class="finishP">Correct answer: <%=player.answers[i].correctAnswer%></p>
+                <p class="finisListItemText">Your answer: <%=player.answers[i].givenAnswer%></p>
+                <p class="finisListItemText">Correct answer: <%=player.answers[i].correctAnswer%></p>
                 <audio class="audio-player-finish" src="/<%=player.answers[i].sound%>">sd</audio>
             </div>
             <div>
-                <i class="play-finish fa fa-play"></i>
+                <i class="playFinishPage fa fa-play"></i>
             </div>
         </div>
     <% } %>
     
 <% } %>
-<hr class="hrFinish">
-<div class="directingA">   
-    <button id="retry" class="directing">Try Again</button>
-    <a href="/toplist"><button class="directing">Show Toplist</button></a>
+
+<hr class="hrWide">
+<div class="buttonContainer">   
+    <button id="retry" class="directingButton">Try Again</button>
+    <a href="/toplist"><button class="directingButton">Show Toplist</button></a>
 </div>
 
 <form action="/retry" method="POST">
@@ -48,7 +49,7 @@
         document.getElementById("inputButton").click();
     })
 
-    var play_button = $('.play-finish');
+    var play_button = $('.playFinishPage');
     var player = $(".audio-player-finish");
   
     for(let i = 0; i < player.length; i++) {

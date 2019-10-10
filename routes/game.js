@@ -12,6 +12,23 @@ router.get("/", (req, res) => {
     res.render("welcome");
 });
 
+router.post("/addPlayer", (req, res) => {
+    var newPlayer = new Player({
+        username: req.body.playerName,
+        points: 0
+    });
+    Player.register(newPlayer, password, (err, player) => {
+        if (err) {
+            req.flash("error", err.message);
+            console.log(err);
+            return res.redirect("back");
+        }
+        passport.authenticate("local")(req, res, () => {
+            res.redirect(`/game/${player._id}/1`);
+        });
+    });
+});
+
 router.get("/game/:player/:lvl", (req, res) => {
     var points = 0;
     Player.findById(req.params.player, (err, player) => {
@@ -39,46 +56,13 @@ router.get("/game/:player/:lvl", (req, res) => {
             });
         }
     });
-})
-
-
-router.post("/addPlayer", (req, res) => {
-    var newPlayer = new Player({
-        username: req.body.playerName,
-        points: 0
-    })
-    Player.register(newPlayer, password, (err, player) => {
-        if(err) {
-            req.flash("error", err.message);
-            console.log(err);
-            return res.redirect("back");
-        }
-        passport.authenticate("local")(req, res, () => {
-            //req.flash("success", "Successfully registred, " + user.username);
-            console.log(`reged: ${player}`);
-            res.redirect(`/game/${player._id}/1`);
-        })
-    })
-});
-
-router.post("/retry", (req, res) => {
-    Player.findByIdAndUpdate(req.body.playerID,{
-        points: 0,
-        answers: []
-    },{new: true}, (err, player) => {
-        if(err){
-            console.log(player);
-        } else {
-            res.redirect(`/game/${player._id}/1`);
-        }
-    })
 });
 
 router.post("/game/:player/:lvl", checkLevel, (req, res) => {
     var right = false;
     var lvl = 0;
     var points = req.body.points;
-    if(req.body.givenAnswer === req.body.answerCorrect){
+    if (req.body.givenAnswer === req.body.answerCorrect) {
         right = true;
         points++;
     }
@@ -93,12 +77,12 @@ router.post("/game/:player/:lvl", checkLevel, (req, res) => {
                 sound: req.body.sound
             }
         }
-    },{new: true} , (err, player) => {
+    }, {new: true}, (err, player) => {
         lvl = player.answers.length + 1;
-        if(err) {
+        if (err) {
             console.log(err);
         } else {
-            if(lvl>10){
+            if (lvl > 10) {
                 res.redirect(`/finish/${req.params.player}`)
             } else {
                 res.redirect(`/game/${req.params.player}/${lvl}`);
@@ -107,29 +91,27 @@ router.post("/game/:player/:lvl", checkLevel, (req, res) => {
     });
 });
 
-
-
-function checkLevel(req, res, next){
+router.get("/finish/:player", (req, res) => {
     Player.findById(req.params.player, (err, player) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.render("finish", {
+                player: player
+            });
+        }
+    })
+});
+
+router.post("/retry", (req, res) => {
+    Player.findByIdAndUpdate(req.body.playerID,{
+        points: 0,
+        answers: []
+    },{new: true}, (err, player) => {
         if(err){
             console.log(err);
         } else {
-            if(player.answers.length > 9){
-                res.redirect(`/finish/${req.params.player}`);
-            } else {
-                next();
-            }
-        }
-    })
-}
-
-router.get("/finish/:player", (req, res) => {
-    Player.findById(req.params.player, (err, player) => {
-        if(err) {
-            console.log(err);
-        } else {
-            console.log(player);
-            res.render("finish", {player: player});
+            res.redirect(`/game/${player._id}/1`);
         }
     })
 });
@@ -139,8 +121,6 @@ router.get("/toplist", (req, res) => {
         if(err){
             console.log(err);
         } else {
-            //console.log(allPlayers);
-            //homes.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
             allPlayers.sort((a, b) => parseFloat(b.points) - parseFloat(a.points));
             var player = [], points = [];
             for(let i = 0; i < allPlayers.length; i++){
@@ -153,7 +133,19 @@ router.get("/toplist", (req, res) => {
 });
 
 
-
+function checkLevel(req, res, next) {
+    Player.findById(req.params.player, (err, player) => {
+        if (err) {
+            console.log(err);
+        } else {
+            if (player.answers.length > 9) {
+                res.redirect(`/finish/${req.params.player}`);
+            } else {
+                next();
+            }
+        }
+    })
+}
 
 function shuffle(array) {
     var currentIndex = array.length,

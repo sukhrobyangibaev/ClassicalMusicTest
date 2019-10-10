@@ -1,41 +1,41 @@
 <% include ./partials/header %>
 
-<div class="chooseLine">
+<div class="textLine">
     <p>TopList</p>
 </div>
-<hr class="hrFinish">
+<hr class="hrWide">
 <hr>
-<div class="toplistContainerHeader">
-    <div class="item">
+<div class="toplistTable">
+    <div class="topListItem">
         <p>#</p>
     </div>
-    <div class="item">
+    <div class="topListItem">
         <p>Player</p>
     </div>
-    <div class="item">
+    <div class="topListItem">
         <p>Score</p>
     </div>
 </div>
-<hr class="hrFinish">
+<hr class="hrWide">
 <% for(let i = 0; i < 10; i++) { %>
     <hr>
-    <div class="toplistContainer">
-        <div class="item">
+    <div class="toplistTable">
+        <div class="topListItem">
             <p><%= i+1 %></p>
         </div>
-        <div class="item">
+        <div class="topListItem">
             <p><%= player[i] %></p>
         </div>
-        <div class="item">
+        <div class="topListItem">
             <p><%= points[i] %></p>
         </div>
     </div>
     
 <% } %>
-<hr class="hrFinish">
+<hr class="hrWide">
 <hr>
-<div class="directingA">
-    <a href="/"><button id="retry" class="directing">Home</button></a>
+<div class="buttonContainer">
+    <a href="/"><button id="retry" class="directingButton">Home</button></a>
 </div>
 
 
